@@ -127,11 +127,14 @@ void button_callback(uint gpio, uint32_t events) {
 void draw_menu(uint8_t *ssd, struct render_area frame_area, int selected) {
     memset(ssd, 0, ssd1306_buffer_length); // Limpa a tela
 
+    ssd1306_draw_string(ssd, 48, 0, "MENU"); // Desenha o título (MENU)
+    ssd1306_draw_line(ssd, 0, 10, 127, 10, true); // Desenha a linha separadora
+
     for (int i = 0; i < MENU_SIZE; i++) {
         if (i == selected) {
-            ssd1306_draw_string(ssd, 0, 12 + i * 16, "x"); // Desenha o marcador ('x')
+            ssd1306_draw_string(ssd, 3, 18 + i * 16, "x"); // Desenha o marcador ('x')
         }
-        ssd1306_draw_string(ssd, 10, 12 + i * 16, menu_options[i]); // Desenha a opção
+        ssd1306_draw_string(ssd, 10, 18 + i * 16, menu_options[i]); // Desenha a opção
     }
 
     render_on_display(ssd, &frame_area);
