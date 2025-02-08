@@ -1,12 +1,4 @@
-#include <stdio.h>
-#include "pico/stdlib.h"
-#include "hardware/pwm.h"
-#include "hardware/clocks.h"
-
-// Configuração do pino do buzzer
-#define BUZZER_PIN 21
-
-extern volatile bool in_function;
+#include "buzzer.h"
 
 // Inicializa o PWM no pino do buzzer
 void pwm_init_buzzer(uint pin) {
@@ -27,17 +19,18 @@ void play_tone(uint pin, uint frequency, uint duration_ms) {
     pwm_set_wrap(slice_num, top);
     pwm_set_gpio_level(pin, top / 2); // 50% de duty cycle
 
-    // sleep_ms(duration_ms);
+    sleep_ms(duration_ms); // Aguarda duração da nota
 
     pwm_set_gpio_level(pin, 0); // Desliga o som após a duração
-    // sleep_ms(50); // Pausa entre notas
+    sleep_ms(50); // Pequena pausa entre notas
 }
 
+// Loop principal do buzzer
 void buzzer() {
     pwm_init_buzzer(BUZZER_PIN);
     
-    while(in_function){
+    while (in_function) {
         play_tone(BUZZER_PIN, 1000, 100); // Toca uma nota
     }
-    pwm_set_gpio_level(BUZZER_PIN, 0); // Desliga o som após a duração
+    pwm_set_gpio_level(BUZZER_PIN, 0); // Garante que o buzzer será desligado
 }

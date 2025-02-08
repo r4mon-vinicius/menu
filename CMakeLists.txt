@@ -36,6 +36,12 @@ pico_sdk_init()
 # Adiciona a biblioteca do display oled
 add_subdirectory(libs/oled)
 
+add_subdirectory(libs/buzzer)
+
+add_subdirectory(libs/joystick_led)
+
+add_subdirectory(libs/led_rgb)
+
 # Add executable. Default name is the project name, version 0.1
 add_executable(menu menu.c)
 
@@ -61,6 +67,9 @@ target_link_libraries(menu
         hardware_adc
         hardware_pwm
         oled
+        buzzer
+        joystick_led
+        led_rgb
         )
 
 pico_add_extra_outputs(menu)

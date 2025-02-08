@@ -2,9 +2,9 @@
 #include "pico/stdlib.h"
 #include "hardware/adc.h"
 #include "ssd1306.h"
-#include "joystick_led.c"
-#include "buzzer.c"
-#include "led_rgb.c"
+#include "joystick_led.h"
+#include "buzzer.h"
+#include "led_rgb.h"
 
 // Define os pinos do I2C e joystick
 #define I2C_SDA 14
