@@ -32,6 +32,7 @@ char *menu_options[] = {" JOYSTICK LED", " BUZZER", " LED RGB"}; // Opções do 
 // Protótipos de funções
 void init_display(uint8_t *ssd, struct render_area *frame_area);
 void draw_menu(uint8_t *ssd, struct render_area frame_area, int selected);
+void draw_return(uint8_t *ssd, struct render_area frame_area);
 int read_joystick();
 void button_callback(uint gpio, uint32_t events);
 
@@ -69,6 +70,7 @@ int main() {
             }
         } else { // Executa a função escolhida
             in_function = true; // Indica que está em execução
+            draw_return(ssd, frame_area); // Desenha a tela de retorno
             menu_functions[current_function](); // Chama a função correspondente
             in_function = false; // Volta ao menu ao pressionar o botão
             function_selected = false; // Permite navegar no menu novamente
@@ -132,6 +134,15 @@ void draw_menu(uint8_t *ssd, struct render_area frame_area, int selected) {
         ssd1306_draw_string(ssd, 10, 12 + i * 16, menu_options[i]); // Desenha a opção
     }
 
+    render_on_display(ssd, &frame_area);
+}
+
+// Desenha a tela de retorno no OLED
+void draw_return(uint8_t *ssd, struct render_area frame_area) {
+    memset(ssd, 0, ssd1306_buffer_length); // Limpa a tela
+    ssd1306_draw_string(ssd, 20, 12, "PRESS BUTTON"); // Desenha a opção
+    ssd1306_draw_string(ssd, 56, 28, "TO"); // Desenha a opção
+    ssd1306_draw_string(ssd, 40, 44, "RETURN"); // Desenha a opção
     render_on_display(ssd, &frame_area);
 }
 
