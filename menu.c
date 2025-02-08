@@ -17,6 +17,10 @@
 #define JOYSTICK_THRESHOLD_UP 4000   // Para cima
 #define JOYSTICK_THRESHOLD_DOWN 1000 // Para baixo
 
+#define DEBOUNCE_TIME_MS 200 // Tempo de debounce para o botão
+
+volatile uint32_t last_button_press = 0;  // Último acionamento do botão (Debounce)
+
 volatile int menu_pos = 0; // Variável de controle do menu
 volatile bool function_selected = false; // Flag que indica se uma função foi selecionada
 volatile int current_function = -1; // Indica a função atual
@@ -98,12 +102,20 @@ void init_display(uint8_t *ssd, struct render_area *frame_area) {
 
 // Callback para o botão do joystick
 void button_callback(uint gpio, uint32_t events) {
-    busy_wait_ms(50); // Atraso para evitar múltiplos eventos
-    if (gpio == JOYSTICK_BTN) { // Verifica se o evento é do botão
+    uint32_t current_time = to_ms_since_boot(get_absolute_time()); // Obtém tempo atual
+
+    // Se o tempo desde a última ativação for menor que o tempo de debounce, ignora
+    if (current_time - last_button_press < DEBOUNCE_TIME_MS) {
+        return;
+    }
+    last_button_press = current_time; // Atualiza o tempo do último acionamento
+
+    // Lógica do botão
+    if (gpio == JOYSTICK_BTN) {
         if (in_function) {
-            in_function = false; // Se estiver executando uma função, pressionar o botão faz voltar ao menu
+            in_function = false; // Se estiver em uma função, voltar ao menu
         } else if (!function_selected) {
-            function_selected = true; // Se estiver no menu, pressionar o botão seleciona a função
+            function_selected = true; // Se estiver no menu, seleciona a função
             current_function = menu_pos;
         }
     }
@@ -115,9 +127,9 @@ void draw_menu(uint8_t *ssd, struct render_area frame_area, int selected) {
 
     for (int i = 0; i < MENU_SIZE; i++) {
         if (i == selected) {
-            ssd1306_draw_string(ssd, 0, i * 16, "x"); // Desenha o marcador
+            ssd1306_draw_string(ssd, 0, 12 + i * 16, "x"); // Desenha o marcador ('x')
         }
-        ssd1306_draw_string(ssd, 10, i * 16, menu_options[i]); // Desenha a opção
+        ssd1306_draw_string(ssd, 10, 12 + i * 16, menu_options[i]); // Desenha a opção
     }
 
     render_on_display(ssd, &frame_area);
