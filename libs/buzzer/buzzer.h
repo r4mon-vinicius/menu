@@ -7,11 +7,17 @@
 
 #define BUZZER_PIN 21  // Definição do pino do buzzer
 
-extern volatile bool in_function; // Variável global externa
+extern volatile bool in_function; 
 
-// Declaração das funções
+// Inicializa o buzzer
 void pwm_init_buzzer(uint pin);
-void play_tone(uint pin, uint frequency, uint duration_ms);
+
+// Define a frequência do buzzer
+void set_tone(uint pin, uint frequency);
+
+// Toca a música do Star Wars
+void play_star_wars(uint pin);
+
 void buzzer();
 
 #endif 

@@ -19,7 +19,7 @@
 
 #define DEBOUNCE_TIME_MS 200 // Tempo de debounce para o botão
 
-volatile uint32_t last_button_press = 0;  // Último acionamento do botão (Debounce)
+volatile uint64_t last_button_press = 0;  // Último acionamento do botão (Debounce)
 
 volatile int menu_pos = 0; // Variável de controle do menu
 volatile bool function_selected = false; // Flag que indica se uma função foi selecionada
@@ -102,7 +102,7 @@ void init_display(uint8_t *ssd, struct render_area *frame_area) {
 
 // Callback para o botão do joystick
 void button_callback(uint gpio, uint32_t events) {
-    uint32_t current_time = to_ms_since_boot(get_absolute_time()); // Obtém tempo atual
+    uint64_t current_time = to_ms_since_boot(get_absolute_time()); // Obtém tempo atual
 
     // Se o tempo desde a última ativação for menor que o tempo de debounce, ignora
     if (current_time - last_button_press < DEBOUNCE_TIME_MS) {
